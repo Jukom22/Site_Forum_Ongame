@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block titulo %} Fórum em Django para Ongame - TOPICO DETALHADO {% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <b>{{ topico.assunto }} - Categoria: {{topico.categoria}}</b>
+        <small class="text-muted">por {{ topico.autor.nome }} em {{ topico.data_postagem }}</small>
+    </div>
+    <div class="card-body">
+        <p>{{ topico.mensagens }}</p>
+    </div>
+    {% if tipo_usuario == 'A' %}
+    <div class="card mb-2">
+        {% if topico.status_post == 'A' %}
+            <a href="{% url 'adm_topico' id_topico=topico.id status_post='I'%}" class="btn btn-danger">Inativar Post</a>
+        {% else %}
+            <a href="{% url 'adm_topico' id_topico=topico.id status_post='A'%}" class="btn btn-primary">Ativar Post</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="mt-4 mb-4">
+    <h3>Comentários</h3>
+    {% for comentario in comentarios %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <p>{{ comentario.conteudo }}</p>
+            <small class="text-muted">por {{ comentario.autor.nome }} em {{ comentario.data_comentario }}</small>
+            
+            {% if tipo_usuario == 'A' %}
+                {% if comentario.status_comentario == 'A' %}
+                    <a href="{% url 'adm_comentario' id_comentario=comentario.id status_comentario='I'%}" class="btn btn-danger">Inativar Comentário</a>
+                {% else %}
+                    <a href="{% url 'adm_comentario' id_comentario=comentario.id status_comentario='A'%}" class="btn btn-primary">Ativar Comentário</a>
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if request.session.id_usuario > 0 %}
+<div class="card">
+    <div class="card-header">
+        Adicionar Comentário
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Postar Comentário</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

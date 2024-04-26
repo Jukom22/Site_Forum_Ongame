@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block titulo %} Fórum em Django para Ongame - TOPICOS {% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h1>Tópicos do Fórum</h1>
+    <div class="list-group">
+        {% for topico in topicos %}
+        <a href="{% url 'topico_detalhado' topico.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ topico.assunto }}</h5>
+                <small>Postado em {{ topico.data_postagem|date:"d M Y" }}</small>
+            </div>
+            <p class="mb-1">Categoria: {{ topico.categoria }}</p>
+            <small>Por {{ topico.autor.nome }}</small>
+        </a>
+        {% empty %}
+        <div class="alert alert-info" role="alert">
+            Nenhum tópico encontrado.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
